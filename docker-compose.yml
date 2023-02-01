@@ -1,0 +1,21 @@
+version: "3"
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+services:
+  pihole:
+    container_name: pihole-compose
+    image: pihole/pihole:latest
+    network_mode: "host"
+    environment:
+      TZ: 'Europe/Berlin'
+      DNSMASQ_LISTENING: local
+      ADMIN_EMAIL: ${EMAIL}
+      WEBPASSWORD: ${PASS}
+      WEB_PORT: ${PORT}
+      ServerIP: ${IP}
+      FTLCONF_REPLY_ADDR4: ${IP}
+      VIRTUAL_HOST: ${VIRTALHOST}
+    volumes:
+      - '/volume1/docker/pihole/etc:/etc/pihole'
+      - '/volume1/docker/pihole/dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped
