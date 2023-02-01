@@ -14,7 +14,7 @@ services:
       WEB_PORT: ${PORT}
       ServerIP: ${IP}
       FTLCONF_REPLY_ADDR4: ${IP}
-      VIRTUAL_HOST: ${VIRTALHOST}
+      VIRTUAL_HOST: ${VIRTUALHOST}
     volumes:
       - '/volume1/docker/pihole/etc:/etc/pihole'
       - '/volume1/docker/pihole/dnsmasq.d:/etc/dnsmasq.d'
