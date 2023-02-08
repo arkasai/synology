@@ -7,15 +7,17 @@ services:
     image: pihole/pihole:latest
     network_mode: "host"
     environment:
-      TZ: 'Europe/Berlin'
-      DNSMASQ_LISTENING: local
+      FTLCONF_LOCAL_IPV4: ${IP}
+      PIHOLE_DNS_: ${DNS1};${DNS2}
       ADMIN_EMAIL: ${EMAIL}
       WEBPASSWORD: ${PASS}
       WEB_PORT: ${PORT}
-      ServerIP: ${IP}
-      FTLCONF_REPLY_ADDR4: ${IP}
       VIRTUAL_HOST: ${VIRTUALHOST}
+      IPv6: 'False'
+      DNSSEC: 'False'
+      DNSMASQ_LISTENING: local
+      TZ: 'Europe/Berlin'
     volumes:
-      - '/volume1/docker/pihole/etc:/etc/pihole'
-      - '/volume1/docker/pihole/dnsmasq.d:/etc/dnsmasq.d'
+      - '${LOCALPATH}/etc:/etc/pihole'
+      - '${LOCALPATH}/dnsmasq.d:/etc/dnsmasq.d'
     restart: unless-stopped
