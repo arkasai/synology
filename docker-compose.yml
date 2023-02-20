@@ -5,7 +5,22 @@ services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
-    network_mode: "host"
+    #network_mode: "host"
+    hostname: pihole
+    mac_address: d0:ca:ab:cd:ef:01
+    networks:
+      pihole_network:
+        ipv4_address: ${IP}
+    dns:
+      - 127.0.0.1
+      - ${DNS1}
+      - ${DNS2}
+    ports:
+      - 443/tcp
+      - 53/tcp
+      - 53/udp
+      - 67/udp
+      - 80/tcp
     environment:
       FTLCONF_LOCAL_IPV4: ${IP}
       PIHOLE_DNS_: ${DNS1};${DNS2}
@@ -21,3 +36,14 @@ services:
       - '${LOCALPATH}/etc:/etc/pihole'
       - '${LOCALPATH}/dnsmasq.d:/etc/dnsmasq.d'
     restart: unless-stopped
+
+networks:
+  pihole_network:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: ${SUBNET}
+          gateway: ${GATEWAY}
+          ip_range: ${IP_RANGE}
