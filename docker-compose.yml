@@ -1,28 +1,27 @@
 version: "3"
 
-# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
-    #network_mode: "host"
     hostname: pihole
     mac_address: d0:ca:ab:cd:ef:01
     networks:
-      pihole_network:
-        ipv4_address: ${IP}
+      macVlanNetwork:
+        ipv4_address: ${IP_PIHOLE}
     dns:
       - 127.0.0.1
       - ${DNS1}
       - ${DNS2}
     ports:
-      - 443/tcp
       - 53/tcp
       - 53/udp
       - 67/udp
       - 80/tcp
+      - 443/tcp
     environment:
-      FTLCONF_LOCAL_IPV4: ${IP}
+      TZ: 'Europe/Berlin'
+      FTLCONF_LOCAL_IPV4: ${IP_PIHOLE}
       PIHOLE_DNS_: ${DNS1};${DNS2}
       ADMIN_EMAIL: ${EMAIL}
       WEBPASSWORD: ${PASS}
@@ -31,14 +30,43 @@ services:
       IPv6: 'False'
       DNSSEC: 'False'
       DNSMASQ_LISTENING: local
+    volumes:
+      - '${LOCALPATH}/${PATH_PIHOLE}/etc:/etc/pihole'
+      - '${LOCALPATH}/${PATH_PIHOLE}/dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped
+
+  unifi:
+    container_name: unifi
+    image: jacobalberty/unifi:${IMAGE_VERSION}
+    hostname: unifi
+    mac_address: d0:ca:ab:cd:ef:02
+    networks:
+      macVlanNetwork:
+        ipv4_address: ${IP_UNIFI}
+    dns:
+      - 127.0.0.1
+      - ${DNS1}
+      - ${DNS2}
+    ports:
+      - 22/tcp # SSH
+      - 53/tcp # DNS
+      - 53/udp # DNS
+      - 123/udp # NTP
+      - 443/tcp # HTTPS
+      - 1900/udp # L2 network discovery
+      - 3478/tcp # STUN service
+      - 6789/tcp # Speedtest
+      - 8080/tcp # Device command/control
+      - 8443/tcp # HTTPS Web interface + API
+      - 10001/udp # Device discovery
+    environment:
       TZ: 'Europe/Berlin'
     volumes:
-      - '${LOCALPATH}/etc:/etc/pihole'
-      - '${LOCALPATH}/dnsmasq.d:/etc/dnsmasq.d'
+      - '${LOCALPATH}/${PATH_UNIFI}:/unifi'
     restart: unless-stopped
 
 networks:
-  pihole_network:
+  macVlanNetwork:
     driver: macvlan
     driver_opts:
       parent: eth0

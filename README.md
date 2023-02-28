@@ -1,2 +1,5 @@
-# synology-pihole
-Docker-Compose file for running Pi-hole on Synology NAS
+# synology
+Docker-Compose file for running containers on Synology NAS
+
+## PiHole
+## Unifi
