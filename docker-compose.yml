@@ -5,7 +5,7 @@ services:
     container_name: pihole
     image: pihole/pihole:latest
     hostname: pihole
-    mac_address: d0:ca:ab:cd:ef:01
+    mac_address: ${MAC_PIHOLE}
     networks:
       macVlanNetwork:
         ipv4_address: ${IP_PIHOLE}
@@ -39,7 +39,7 @@ services:
     container_name: unifi
     image: jacobalberty/unifi:${IMAGE_VERSION_UNIFI}
     hostname: unifi
-    mac_address: d0:ca:ab:cd:ef:02
+    mac_address: ${MAC_UNIFI}
     networks:
       macVlanNetwork:
         ipv4_address: ${IP_UNIFI}
@@ -69,7 +69,7 @@ services:
     container_name: house-management
     image: wolfgangf/house_mgmt:${IMAGE_VERSION_HOUSE}
     hostname: house-management
-    mac_address: d0:ca:ab:cd:ef:03
+    mac_address: ${MAC_HOUSE}
     networks:
       macVlanNetwork:
         ipv4_address: ${IP_HOUSE}
@@ -78,7 +78,7 @@ services:
       - ${DNS1}
       - ${DNS2}
     ports:
-      - 80:3000/tcp # Webpage/Backend
+      - "80:3000" # Webpage/Backend
     environment:
       TZ: 'Europe/Berlin'
     volumes:
