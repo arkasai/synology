@@ -65,10 +65,10 @@ services:
       - '${LOCALPATH}/${PATH_UNIFI}:/unifi'
     restart: unless-stopped
 
-  house-management:
-    container_name: house-management
+  house:
+    container_name: house
     image: wolfgangf/house_mgmt:${IMAGE_VERSION_HOUSE}
-    hostname: house-management
+    hostname: house
     mac_address: ${MAC_HOUSE}
     networks:
       macVlanNetwork:
