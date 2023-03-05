@@ -37,7 +37,7 @@ services:
 
   unifi:
     container_name: unifi
-    image: jacobalberty/unifi:${IMAGE_VERSION}
+    image: jacobalberty/unifi:${IMAGE_VERSION_UNIFI}
     hostname: unifi
     mac_address: d0:ca:ab:cd:ef:02
     networks:
@@ -63,6 +63,26 @@ services:
       TZ: 'Europe/Berlin'
     volumes:
       - '${LOCALPATH}/${PATH_UNIFI}:/unifi'
+    restart: unless-stopped
+
+  house-management:
+    container_name: house-management
+    image: wolfgangf/house_mgmt:${IMAGE_VERSION_HOUSE}
+    hostname: house-management
+    mac_address: d0:ca:ab:cd:ef:03
+    networks:
+      macVlanNetwork:
+        ipv4_address: ${IP_HOUSE}
+    dns:
+      - 127.0.0.1
+      - ${DNS1}
+      - ${DNS2}
+    ports:
+      - 80:3000/tcp # Webpage/Backend
+    environment:
+      TZ: 'Europe/Berlin'
+    volumes:
+      - '${LOCALPATH}/${PATH_HOUSE}:/usr/app/src/dist/data/'
     restart: unless-stopped
 
 networks:
