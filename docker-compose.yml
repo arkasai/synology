@@ -89,7 +89,7 @@ networks:
   macVlanNetwork:
     driver: macvlan
     driver_opts:
-      parent: eth0
+      parent: ovs_eth0
     ipam:
       config:
         - subnet: ${SUBNET}
